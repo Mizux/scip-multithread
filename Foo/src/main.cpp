@@ -116,7 +116,6 @@ int main(int /*argc*/, char** /*argv*/) {
   std::cerr << "Solve...\n";
 
   SCIPsetIntParam(scip_, "parallel/maxnthreads", 8);
-
   SCIPsolveConcurrent(scip_);
   //SCIPsolve(scip_);
 
@@ -196,23 +195,24 @@ int main(int /*argc*/, char** /*argv*/) {
   std::cerr << "resetParam...\n";
   SCIPresetParams(scip_);
 
-  //std::cerr << "freeTransform...\n";
-  //SCIPfreeTransform(scip_);
+  std::cerr << "freeTransform...\n";
+  SCIPfreeTransform(scip_);
 
-  std::cerr << "releaseVar...\n";
-  SCIPreleaseVar(scip_, &x_);
-  SCIPreleaseVar(scip_, &y_);
-  SCIPreleaseVar(scip_, &z_);
   std::cerr << "releaseConstraints...\n";
   SCIPreleaseCons(scip_, &constraint_0_);
   SCIPreleaseCons(scip_, &constraint_1_);
   SCIPreleaseCons(scip_, &constraint_2_);
 
+  std::cerr << "releaseVar...\n";
+  SCIPreleaseVar(scip_, &x_);
+  SCIPreleaseVar(scip_, &y_);
+  SCIPreleaseVar(scip_, &z_);
+
   solution_number_ = SCIPgetNSols(scip_);
   std::cerr << "Solutions: " << std::to_string(solution_number_) << std::endl;
 
-  //std::cerr << "freeProb...\n";
-  //SCIPfreeProb(scip_);
+  std::cerr << "freeProb...\n";
+  SCIPfreeProb(scip_);
 
   std::cerr << "free...\n";
   SCIPfree(&scip_);
