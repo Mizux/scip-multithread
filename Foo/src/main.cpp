@@ -33,7 +33,10 @@ int main(int /*argc*/, char** /*argv*/) {
 
   SCIPsetIntParam(scip_, "timing/clocktype", 2);
   SCIPsetRealParam(scip_, "limits/memory", 6.59407790080000000e+10);
-  SCIPcreateProb(scip_, "", NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+
+  //SCIPcreateProb(scip_, "", NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+  SCIPcreateProbBasic(scip_, "");
+
   SCIPsetObjsense(scip_, (SCIP_OBJSENSE)1);  // Minimization
   SCIPsetObjsense(scip_, (SCIP_OBJSENSE)-1);  // Maximization
 
