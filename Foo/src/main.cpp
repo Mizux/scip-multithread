@@ -11,15 +11,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include <cstdint>
-#include <limits>
 #include <iostream>
+#include <limits>
 
 #include "scip/cons_indicator.h"
+#include "scip/prob.h"
 #include "scip/scip.h"
 #include "scip/scip_prob.h"
-#include "scip/struct_scip.h"
-#include "scip/prob.h"
 #include "scip/scipdefplugins.h"
+#include "scip/struct_scip.h"
 
 const double inf = std::numeric_limits<double>::infinity();
 
@@ -30,13 +30,14 @@ int main(int /*argc*/, char** /*argv*/) {
   std::cerr << "Init...\n";
   SCIPcreate(&scip_);
   SCIPincludeDefaultPlugins(scip_);
+
   SCIPsetIntParam(scip_, "timing/clocktype", 2);
   SCIPsetRealParam(scip_, "limits/memory", 6.59407790080000000e+10);
   SCIPcreateProb(scip_, "", NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-  SCIPsetObjsense(scip_, (SCIP_OBJSENSE)1);
+  SCIPsetObjsense(scip_, (SCIP_OBJSENSE)1);  // Minimization
 
   SCIPfreeTransform(scip_);
-  SCIPsetObjsense(scip_, (SCIP_OBJSENSE)-1);
+  SCIPsetObjsense(scip_, (SCIP_OBJSENSE)-1);  // Maximization
   SCIPsetIntParam(scip_, "parallel/maxnthreads", 8);
   SCIPfreeTransform(scip_);
 
@@ -65,33 +66,40 @@ int main(int /*argc*/, char** /*argv*/) {
   // Add Constraints
   std::cerr << "Add constraints...\n";
 
+  std::cerr << "Constraint 0...\n";
   // 2*x + 7*y + 3*z <= 50
-  SCIP_CONS* p_4 = nullptr;
+  SCIP_CONS* constraint_0_ = nullptr;
   SCIP_VAR* vars_0[] = {y_, z_, x_};
   SCIP_Real vals_0[] = {7.00000000000000000e+00, 3.00000000000000000e+00,
                         2.00000000000000000e+00};
-  SCIPcreateConsLinear(scip_, &p_4, "auto_c_000000000", 3, vars_0, vals_0, -inf,
-                       5.00000000000000000e+01, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0);
-  SCIPaddCons(scip_, p_4);
+  SCIPcreateConsLinear(scip_, &constraint_0_, "auto_c_000000000", 3, vars_0,
+                       vals_0, -inf, 5.00000000000000000e+01, 1, 1, 1, 1, 1, 0,
+                       0, 0, 0, 0);
+  SCIPaddCons(scip_, constraint_0_);
 
+  std::cerr << "Constraint 1...\n";
   // 3*x - 5*y + 7*z <= 45
-  SCIP_CONS* p_5 = nullptr;
+  SCIP_CONS* constraint_1_ = nullptr;
   SCIP_VAR* vars_1[] = {y_, z_, x_};
   SCIP_Real vals_1[] = {-5.00000000000000000e+00, 7.00000000000000000e+00,
                         3.00000000000000000e+00};
-  SCIPcreateConsLinear(scip_, &p_5, "auto_c_000000001", 3, vars_1, vals_1, -inf,
-                       4.50000000000000000e+01, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0);
-  SCIPaddCons(scip_, p_5);
+  SCIPcreateConsLinear(scip_, &constraint_1_, "auto_c_000000001", 3, vars_1,
+                       vals_1, -inf, 4.50000000000000000e+01, 1, 1, 1, 1, 1, 0,
+                       0, 0, 0, 0);
+  SCIPaddCons(scip_, constraint_1_);
 
+  std::cerr << "Constraint 2...\n";
   // 5*x + 2*y - 6*z <= 37
-  SCIP_CONS* p_6 = nullptr;
+  SCIP_CONS* constraint_2_ = nullptr;
   SCIP_VAR* vars_2[] = {y_, z_, x_};
   SCIP_Real vals_2[] = {2.00000000000000000e+00, -6.00000000000000000e+00,
                         5.00000000000000000e+00};
-  SCIPcreateConsLinear(scip_, &p_6, "auto_c_000000002", 3, vars_2, vals_2, -inf,
-                       3.70000000000000000e+01, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0);
-  SCIPaddCons(scip_, p_6);
+  SCIPcreateConsLinear(scip_, &constraint_2_, "auto_c_000000002", 3, vars_2,
+                       vals_2, -inf, 3.70000000000000000e+01, 1, 1, 1, 1, 1, 0,
+                       0, 0, 0, 0);
+  SCIPaddCons(scip_, constraint_2_);
 
+  std::cerr << "Objective...\n";
   // Maximize 2*x + 2*y + 3*z
   SCIPfreeTransform(scip_);
   SCIPchgVarObj(scip_, x_, 2.00000000000000000e+00);
@@ -106,13 +114,11 @@ int main(int /*argc*/, char** /*argv*/) {
   SCIPsetRealParam(scip_, "limits/gap", 1.00000000000000005e-04);
 
   // Solve
+  std::cerr << "Solve...\n";
   SCIPsolveConcurrent(scip_);
 
-  // Get the results.
-  SCIP_SOL* solution = SCIPgetBestSol(scip_);
-  //SCIPfreeSol(scip_, &solution);
-
   // Check the status: optimal, infeasible, etc.
+  std::cerr << "Check status...\n";
   SCIP_STATUS scip_status = SCIPgetStatus(scip_);
   std::cerr << "status: ";
   switch (scip_status) {
@@ -142,12 +148,56 @@ int main(int /*argc*/, char** /*argv*/) {
       break;
   }
 
-  // Cleanup
-  std::cerr << "cleanup...\n";
-  SCIPresetParams(scip_);
-  std::cerr << "freeTransform...\n";
-  SCIPfreeTransform(scip_);
+  // Get the results.
+  int solution_number_ = SCIPgetNSols(scip_);
+  std::cerr << "Solutions: " << std::to_string(solution_number_) << std::endl;
 
+  std::cerr << "freeSols...\n";
+  SCIP_EXPORT SCIP_SOL** solutions_ = SCIPgetSols(scip_);
+  for (int i=0; i < solution_number_; ++i) {
+   SCIPclearSol(scip_, solutions_[i]);
+   SCIPfreeSol(scip_, &solutions_[i]);
+  }
+
+  //SCIP_SOL* solution = SCIPgetBestSol(scip_);
+  //SCIPfreeSol(scip_, &solution);
+
+  // Free solutions
+
+  // Get the results.
+  solution_number_ = SCIPgetNSols(scip_);
+  std::cerr << "Solutions: " << std::to_string(solution_number_) << std::endl;
+
+  // Cleanup
+  std::cerr << "Cleanup...\n";
+
+  std::cerr << "freeSolve...\n";
+  SCIPfreeSolve(scip_, /*Restart=*/false);
+
+  std::cerr << "resetParam...\n";
+  SCIPresetParams(scip_);
+
+  //std::cerr << "freeTransform...\n";
+  //SCIPfreeTransform(scip_);
+
+  std::cerr << "releaseVar...\n";
+  SCIPreleaseVar(scip_, &x_);
+  SCIPreleaseVar(scip_, &y_);
+  SCIPreleaseVar(scip_, &z_);
+  std::cerr << "releaseConstraints...\n";
+  SCIPreleaseCons(scip_, &constraint_0_);
+  SCIPreleaseCons(scip_, &constraint_1_);
+  SCIPreleaseCons(scip_, &constraint_2_);
+
+  //std::cerr << "freeProb...\n";
+  //SCIPfreeProb(scip_);
+
+  std::cerr << "free...\n";
+  SCIPfree(&scip_);
+
+  std::cerr << "Free first scip\n";
+
+  /*
   std::cerr << "chgVar...\n";
   SCIPchgVarObj(scip_, x_, 0.00000000000000000e+00);
   SCIPchgVarObj(scip_, y_, 0.00000000000000000e+00);
@@ -156,15 +206,6 @@ int main(int /*argc*/, char** /*argv*/) {
   std::cerr << "freeTransform...\n";
   SCIPfreeTransform(scip_);
 
-  std::cerr << "setObjsense...\n";
-  SCIPsetObjsense(scip_, (SCIP_OBJSENSE)1);
-
-  std::cerr << "free...\n";
-  SCIPfree(&scip_);
-
-  std::cerr << "Free first scip\n";
-
-  /*
   // Create a new scip wrapper
   SCIP* scip_next_ = nullptr;
   SCIPcreate(&scip_next_);
