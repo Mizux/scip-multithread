@@ -117,6 +117,25 @@ int main(int /*argc*/, char** /*argv*/) {
   SCIPsolveConcurrent(scip_);
   //SCIPsolve(scip_);
 
+  // Check the stage.
+  std::cerr << "Check stage...\n";
+  const SCIP_STAGE stage = SCIPgetStage(scip_);
+  std::cerr << "stage: ";
+  switch(stage) {
+    case SCIP_STAGE_PRESOLVING:
+      std::cerr << "PRESOLVING\n";
+      break;
+    case SCIP_STAGE_SOLVING:
+      std::cerr << "SOLVING\n";
+      break;
+    case SCIP_STAGE_SOLVED:
+      std::cerr << "SOLVED\n";
+      break;
+    default:
+      std::cerr << "UNKNOWN !!!\n";
+      break;
+  }
+
   // Check the status: optimal, infeasible, etc.
   std::cerr << "Check status...\n";
   SCIP_STATUS scip_status = SCIPgetStatus(scip_);
