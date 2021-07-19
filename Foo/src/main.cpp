@@ -114,8 +114,8 @@ int main(int /*argc*/, char** /*argv*/) {
 
   SCIPsetIntParam(scip_, "parallel/maxnthreads", 8);
 
-  //SCIPsolveConcurrent(scip_);
-  SCIPsolve(scip_);
+  SCIPsolveConcurrent(scip_);
+  //SCIPsolve(scip_);
 
   // Check the status: optimal, infeasible, etc.
   std::cerr << "Check status...\n";
