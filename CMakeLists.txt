@@ -17,9 +17,9 @@ project(MultiThread VERSION 0.1 LANGUAGES CXX)
 message(STATUS "project: ${PROJECT_NAME}")
 message(STATUS "version: ${PROJECT_VERSION}")
 
-# Force default build type to Release
+# Force default build type to RelWithDebInfo
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
     "Choose the type of build, options are: Debug, Release (default), RelWithDebInfo and MinSizeRel."
     FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
