@@ -35,11 +35,7 @@ int main(int /*argc*/, char** /*argv*/) {
   SCIPsetRealParam(scip_, "limits/memory", 6.59407790080000000e+10);
   SCIPcreateProb(scip_, "", NULL, NULL, NULL, NULL, NULL, NULL, NULL);
   SCIPsetObjsense(scip_, (SCIP_OBJSENSE)1);  // Minimization
-
-  SCIPfreeTransform(scip_);
   SCIPsetObjsense(scip_, (SCIP_OBJSENSE)-1);  // Maximization
-  SCIPsetIntParam(scip_, "parallel/maxnthreads", 8);
-  SCIPfreeTransform(scip_);
 
   // Add Variables
   std::cerr << "Add variables...\n";
@@ -115,7 +111,11 @@ int main(int /*argc*/, char** /*argv*/) {
 
   // Solve
   std::cerr << "Solve...\n";
-  SCIPsolveConcurrent(scip_);
+
+  SCIPsetIntParam(scip_, "parallel/maxnthreads", 8);
+
+  //SCIPsolveConcurrent(scip_);
+  SCIPsolve(scip_);
 
   // Check the status: optimal, infeasible, etc.
   std::cerr << "Check status...\n";
@@ -152,21 +152,18 @@ int main(int /*argc*/, char** /*argv*/) {
   int solution_number_ = SCIPgetNSols(scip_);
   std::cerr << "Solutions: " << std::to_string(solution_number_) << std::endl;
 
-  std::cerr << "freeSols...\n";
-  SCIP_EXPORT SCIP_SOL** solutions_ = SCIPgetSols(scip_);
-  for (int i=0; i < solution_number_; ++i) {
-   SCIPclearSol(scip_, solutions_[i]);
-   SCIPfreeSol(scip_, &solutions_[i]);
-  }
+  //std::cerr << "freeSols...\n";
+  //SCIP_EXPORT SCIP_SOL** solutions_ = SCIPgetSols(scip_);
+  //for (int i=0; i < solution_number_; ++i) {
+  // SCIPclearSol(scip_, solutions_[i]);
+  // SCIPfreeSol(scip_, &solutions_[i]);
+  //}
 
   //SCIP_SOL* solution = SCIPgetBestSol(scip_);
   //SCIPfreeSol(scip_, &solution);
 
-  // Free solutions
-
-  // Get the results.
-  solution_number_ = SCIPgetNSols(scip_);
-  std::cerr << "Solutions: " << std::to_string(solution_number_) << std::endl;
+  //solution_number_ = SCIPgetNSols(scip_);
+  //std::cerr << "Solutions: " << std::to_string(solution_number_) << std::endl;
 
   // Cleanup
   std::cerr << "Cleanup...\n";
@@ -189,33 +186,15 @@ int main(int /*argc*/, char** /*argv*/) {
   SCIPreleaseCons(scip_, &constraint_1_);
   SCIPreleaseCons(scip_, &constraint_2_);
 
+  solution_number_ = SCIPgetNSols(scip_);
+  std::cerr << "Solutions: " << std::to_string(solution_number_) << std::endl;
+
   //std::cerr << "freeProb...\n";
   //SCIPfreeProb(scip_);
 
   std::cerr << "free...\n";
   SCIPfree(&scip_);
 
-  std::cerr << "Free first scip\n";
-
-  /*
-  std::cerr << "chgVar...\n";
-  SCIPchgVarObj(scip_, x_, 0.00000000000000000e+00);
-  SCIPchgVarObj(scip_, y_, 0.00000000000000000e+00);
-  SCIPchgVarObj(scip_, z_, 0.00000000000000000e+00);
-
-  std::cerr << "freeTransform...\n";
-  SCIPfreeTransform(scip_);
-
-  // Create a new scip wrapper
-  SCIP* scip_next_ = nullptr;
-  SCIPcreate(&scip_next_);
-  SCIPincludeDefaultPlugins(scip_next_);
-  SCIPsetIntParam(scip_next_, "timing/clocktype", 2);
-  SCIPsetRealParam(scip_next_, "limits/memory", 6.59407790080000000e+10);
-  SCIPcreateProb(scip_next_, "", NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-  SCIPsetObjsense(scip_next_, (SCIP_OBJSENSE)1);
-  SCIPcopyParamSettings(scip_, scip_next_);
-  */
-  std::cout << "plop" << std::endl;
+  std::cerr << "Done\n";
   return 0;
 }
