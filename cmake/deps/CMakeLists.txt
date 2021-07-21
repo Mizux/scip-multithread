@@ -37,8 +37,11 @@ set(LPS "none" CACHE STRING "Scip param")
 set(SYM "none" CACHE STRING "Scip param")
 FetchContent_Declare(
   scip
-  URL "${CMAKE_CURRENT_LIST_DIR}/scip-7.0.1.tgz"
-  PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/scip-7.0.1.patch")
+  GIT_REPOSITORY https://github.com/scipopt/scip.git
+  GIT_TAG        master
+  #URL "${CMAKE_CURRENT_LIST_DIR}/scip-7.0.1.tgz"
+  #PATCH_COMMAND git apply --ignore-whitespace "${CMAKE_CURRENT_LIST_DIR}/scip-7.0.1.patch"
+  )
 FetchContent_MakeAvailable(scip)
 #set(LPI_GLOP_SRC ${scip_SOURCE_DIR}/src/lpi/lpi_glop.cpp PARENT_SCOPE)
 list(POP_BACK CMAKE_MESSAGE_INDENT)

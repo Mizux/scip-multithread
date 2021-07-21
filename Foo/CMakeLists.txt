@@ -26,7 +26,7 @@ elseif(UNIX AND NOT APPLE)
     INSTALL_RPATH "$ORIGIN/../${CMAKE_INSTALL_LIBDIR}")
 endif()
 
-target_link_libraries(Foo PUBLIC libscip)
+target_link_libraries(Foo PUBLIC SCIP::libscip)
 add_executable(${PROJECT_NAME}::Foo ALIAS Foo)
 
 if(BUILD_TESTING)
