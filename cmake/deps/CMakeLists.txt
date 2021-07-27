@@ -21,6 +21,18 @@ include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
 set(FETCHCONTENT_UPDATES_DISCONNECTED ON)
 
+# ZLIB
+message(CHECK_START "Fetching ZLIB")
+list(APPEND CMAKE_MESSAGE_INDENT "  ")
+FetchContent_Declare(
+  zlib
+  GIT_REPOSITORY "https://github.com/madler/ZLIB.git"
+  GIT_TAG "v1.2.11"
+  PATCH_COMMAND git apply "${CMAKE_CURRENT_LIST_DIR}/ZLIB.patch")
+FetchContent_MakeAvailable(zlib)
+list(POP_BACK CMAKE_MESSAGE_INDENT)
+message(CHECK_PASS "fetched")
+
 # SCIP
 message(CHECK_START "Fetching SCIP")
 list(APPEND CMAKE_MESSAGE_INDENT "  ")
