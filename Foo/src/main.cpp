@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <iostream>
 #include <limits>
+#include <string>
 
 #include "scip/cons_indicator.h"
 #include "scip/prob.h"
