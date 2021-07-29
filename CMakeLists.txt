@@ -13,20 +13,29 @@
 cmake_minimum_required(VERSION 3.18)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 project(MultiThread VERSION 0.1 LANGUAGES CXX)
 message(STATUS "project: ${PROJECT_NAME}")
 message(STATUS "version: ${PROJECT_VERSION}")
 
 # Force default build type to RelWithDebInfo
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
+  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
+    #set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
     "Choose the type of build, options are: Debug, Release (default), RelWithDebInfo and MinSizeRel."
     FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+option(CLANG_TSAN "Enable Clang thread sanitizer" ON)
+if (CLANG_TSAN)
+  set(CMAKE_C_FLAGS "-fsanitize=thread -O1")
+  set(CMAKE_CXX_FLAGS "-fsanitize=thread -O1")
+endif()
 
 # Layout build dir like install dir
 include(GNUInstallDirs)
