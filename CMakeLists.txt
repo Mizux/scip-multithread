@@ -31,7 +31,7 @@ if(NOT CMAKE_BUILD_TYPE)
     FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-option(CLANG_TSAN "Enable Clang thread sanitizer" ON)
+option(CLANG_TSAN "Enable Clang thread sanitizer" OFF)
 if (CLANG_TSAN)
   set(CMAKE_C_FLAGS "-fsanitize=thread")
   set(CMAKE_CXX_FLAGS "-fsanitize=thread")
