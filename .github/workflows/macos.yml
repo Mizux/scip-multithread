@@ -16,14 +16,14 @@ jobs:
     - name: Check cmake
       run: cmake --version
     - name: Configure
-      run: cmake -S. -Bbuild -G "Xcode" -DCMAKE_CONFIGURATION_TYPES=Debug
+      run: cmake -S. -Bbuild -G "Xcode" -DCMAKE_CONFIGURATION_TYPES=RelWithDebInfo
     - name: Build
-      run: cmake --build build --config Debug --target ALL_BUILD -v
+      run: cmake --build build --config RelWithDebInfo --target ALL_BUILD -v
     - name: Manual Test
       continue-on-error: true
-      run: ./build/DEBUG/bin/Foo
+      run: ./build/RELEASE/bin/Foo
     - name: Test
-      run: CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --config Debug --target RUN_TESTS -v
+      run: CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --config RelWithDebInfo --target RUN_TESTS -v
   make:
     runs-on: macos-latest
     steps:

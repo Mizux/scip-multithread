@@ -25,7 +25,7 @@ message(STATUS "version: ${PROJECT_VERSION}")
 
 # Force default build type to RelWithDebInfo
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
+  set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
     #set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
     "Choose the type of build, options are: Debug, Release (default), RelWithDebInfo and MinSizeRel."
     FORCE)
@@ -33,8 +33,8 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 option(CLANG_TSAN "Enable Clang thread sanitizer" ON)
 if (CLANG_TSAN)
-  set(CMAKE_C_FLAGS "-fsanitize=thread -O1")
-  set(CMAKE_CXX_FLAGS "-fsanitize=thread -O1")
+  set(CMAKE_C_FLAGS "-fsanitize=thread")
+  set(CMAKE_CXX_FLAGS "-fsanitize=thread")
 endif()
 
 # Layout build dir like install dir
