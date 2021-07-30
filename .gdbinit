@@ -1,0 +1,8 @@
+set pagination off
+#set breakpoint pending on
+break exit
+commands
+run
+end
+
+run
