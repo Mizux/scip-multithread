@@ -1,6 +1,7 @@
 # Project Files unneeded by docker
 ci/Makefile
 ci/docker
+ci/README.md
 ci/doc
 ci/cache
 
