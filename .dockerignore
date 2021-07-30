@@ -1,0 +1,23 @@
+# Project Files unneeded by docker
+ci/Makefile
+ci/docker
+ci/doc
+ci/cache
+
+.git
+.gitignore
+.github
+.dockerignore
+.clang-format
+
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE
+README.md
+
+build*/
+.cache*/
+
+# Editor directories and files
+*.user
+*.swp
