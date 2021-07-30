@@ -21,6 +21,9 @@ jobs:
       run: cmake -S. -Bbuild -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
     - name: Build
       run: cmake --build build --target all -v
+    - name: Manual Test
+      continue-on-error: true
+      run: ./build/bin/Foo
     - name: Test
       run: CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
 
