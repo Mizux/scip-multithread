@@ -9,7 +9,7 @@ on:
 
 jobs:
   # Building using the github runner environement directly.
-  build-linux:
+  clang:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -18,7 +18,20 @@ jobs:
     - name: Check cmake
       run: cmake --version
     - name: Configure
-      run: cmake -S. -Bbuild
+      run: cmake -S. -Bbuild -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+    - name: Build
+      run: cmake --build build --target all -v
+    - name: Test
+      run: CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test -v
+
+  gcc:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check cmake
+      run: cmake --version
+    - name: Configure
+      run: cmake -S. -Bbuild -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
     - name: Build
       run: cmake --build build --target all -v
     - name: Manual Test
