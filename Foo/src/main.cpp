@@ -116,7 +116,7 @@ int main(int /*argc*/, char** /*argv*/) {
   // Solve
   std::cerr << "Solve...\n";
 
-  SCIPsetIntParam(scip_, "parallel/maxnthreads", 8);
+  SCIPsetIntParam(scip_, "parallel/maxnthreads", 16);
   SCIPsolveConcurrent(scip_);
   //SCIPsolve(scip_);
 
