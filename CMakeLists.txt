@@ -17,6 +17,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(CLANG_TSAN "Enable Clang thread sanitizer" OFF)
+if (CLANG_TSAN)
+  set(CMAKE_C_COMPILER clang)
+  set(CMAKE_C_FLAGS "-fsanitize=thread")
+  set(CMAKE_CXX_COMPILER clang++)
+  set(CMAKE_CXX_FLAGS "-fsanitize=thread")
+endif()
+
 project(MultiThread VERSION 0.1 LANGUAGES CXX)
 message(STATUS "project: ${PROJECT_NAME}")
 message(STATUS "version: ${PROJECT_VERSION}")
@@ -28,14 +36,6 @@ if(NOT CMAKE_BUILD_TYPE)
     "Choose the type of build, options are: Debug, Release (default), RelWithDebInfo and MinSizeRel."
     FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
-
-option(CLANG_TSAN "Enable Clang thread sanitizer" OFF)
-if (CLANG_TSAN)
-  set(CMAKE_C_COMPILER clang)
-  set(CMAKE_C_FLAGS "-fsanitize=thread")
-  set(CMAKE_CXX_COMPILER clang++)
-  set(CMAKE_CXX_FLAGS "-fsanitize=thread")
-endif()
 
 # Layout build dir like install dir
 include(GNUInstallDirs)
